@@ -168,12 +168,30 @@
 			flex: 1;
 			padding-right: 15px;
         }
+		
+		/* --- LIVE CLOCK STYLES --- */
+        .site-clock {
+            text-align: center;
+            color: #8c7a6b;
+            font-size: 1.05em;
+            font-weight: 700;
+            background-color: #f2ebe6;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 2px dashed #d9cbbb;
+            margin: -10px auto 30px auto;
+            width: fit-content;
+            box-shadow: 0 4px 12px rgba(140, 122, 107, 0.08);
+        }
     </style>
 </head>
 <body>
 
     <div class="schedule-container">
-        <h1>Class Schedule<br>(≡ ⓛ ω ⓛ ≡)</h1>
+        <h1>(๑ↀᆺↀ๑)<br>Class Schedule</h1>
+		<div id="live-clock" class="site-clock">
+			Loading time... ✧
+		</div>
 
         <details class="day-section monday">
             <summary class="day-title">Monday</summary>
@@ -279,10 +297,34 @@
 
     <script>
         const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+		
+		// Force GMT+7
+		function getGMT7Time() {
+            return new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
+        }
         
+		// WIB Clock
+		function updateLiveClock() {
+            const clockEl = document.getElementById('live-clock');
+            if (!clockEl) return;
+
+            // Force the timezone to WIB (Asia/Jakarta)
+            const wibTime = getGMT7Time();
+            const dateObj = new Date(wibTime);
+
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const dayName = dayNames[dateObj.getDay()];
+            
+            const hours = dateObj.getHours().toString().padStart(2, '0');
+            const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+            const seconds = dateObj.getSeconds().toString().padStart(2, '0');
+
+            clockEl.innerHTML = `${dayName}, ${hours}:${minutes}:${seconds}`;
+        }
+		
         // Helper: Check if all classes for a specific day are over
         function isTodayDone() {
-            const now = new Date();
+            const now = getGMT7Time();
             const todayClass = days[now.getDay()];
             const todayElement = document.querySelector('.' + todayClass);
             
@@ -314,7 +356,7 @@
 
         // Initialize which day to show
         function initScheduleDisplay() {
-            const now = new Date();
+            const now = getGMT7Time();
             let targetIndex = now.getDay();
             let showingFuture = false;
             
@@ -347,7 +389,7 @@
 
         // Check for upcoming classes and update countdowns
         function updateTimers() {
-            const now = new Date();
+            const now = getGMT7Time();
             const todayIndex = now.getDay();
             const todayClass = days[todayIndex];
             
@@ -400,7 +442,11 @@
         initScheduleDisplay();
         
         updateTimers();
-        setInterval(updateTimers, 1000);
+		updateLiveClock();
+        setInterval(() => {
+			updateTimers();
+			updateLiveClock();
+		}, 1000);
     </script>
 </body>
 </html>
