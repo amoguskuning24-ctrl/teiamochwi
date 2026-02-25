@@ -84,6 +84,7 @@
             margin-bottom: 15px;
             position: relative;
             overflow: hidden;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .class-card:last-child {
@@ -120,6 +121,32 @@
         .icon {
             margin-right: 8px;
             font-size: 1.1em;
+        }
+
+        /* --- NEW WARNING STYLES --- */
+        .class-card.upcoming-warning {
+            background-color: #ffeaea !important; 
+            border-left: 6px solid #ff4d4d !important; 
+            animation: pulse 2s infinite;
+        }
+
+        .countdown-warning {
+            margin-top: 10px;
+            font-weight: 700;
+            color: #d32f2f;
+            background: #fff0f0;
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid #ffcdd2;
+            font-size: 0.9em;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.3); }
+            70% { box-shadow: 0 0 0 8px rgba(255, 77, 77, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
         }
     </style>
 </head>
@@ -231,19 +258,78 @@
     </div>
 
     <script>
-        // Get current day
-        const todayIndex = new Date().getDay();
-        
-        // Match index to class names
         const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-        const todayClass = days[todayIndex];
-
+        
         // Find today's element and open it
-        const todayElement = document.querySelector('.' + todayClass);
-        if (todayElement) {
-            todayElement.setAttribute('open', '');
+        function openTodaySection() {
+            const todayIndex = new Date().getDay();
+            const todayClass = days[todayIndex];
+            const todayElement = document.querySelector('.' + todayClass);
+            if (todayElement) {
+                todayElement.setAttribute('open', '');
+            }
         }
+
+        // Check for upcoming classes and update countdowns
+        function updateTimers() {
+            const now = new Date();
+            const todayIndex = now.getDay();
+            const todayClass = days[todayIndex];
+            
+            // Only search within today's open section
+            const todayElement = document.querySelector('.' + todayClass);
+            if (!todayElement) return;
+
+            const classCards = todayElement.querySelectorAll('.class-card');
+
+            classCards.forEach(card => {
+                // Find the detail row that contains the time (looks for 🕒)
+                const timeRow = Array.from(card.querySelectorAll('.detail-row')).find(row => row.textContent.includes('🕒'));
+                if (!timeRow) return;
+
+                // Extract the start time using regex
+                const timeMatch = timeRow.textContent.match(/(\d{2}):(\d{2})/);
+                if (!timeMatch) return;
+
+                const startHour = parseInt(timeMatch[1], 10);
+                const startMinute = parseInt(timeMatch[2], 10);
+
+                // Create a Date object for today's class start time
+                const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute, 0);
+                
+                // Calculate the difference in milliseconds
+                const timeDiffMs = startTime - now;
+                const diffMinutes = Math.floor(timeDiffMs / 60000);
+                const diffSeconds = Math.floor((timeDiffMs % 60000) / 1000);
+
+                // Check if class is exactly within the next 1 hour
+                if (timeDiffMs > 0 && timeDiffMs <= 60 * 60 * 1000) {
+                    card.classList.add('upcoming-warning');
+                    
+                    // See if countdown element already exists, if not, create it
+                    let countdownEl = card.querySelector('.countdown-warning');
+                    if (!countdownEl) {
+                        countdownEl = document.createElement('div');
+                        countdownEl.className = 'countdown-warning';
+                        card.querySelector('.class-details').appendChild(countdownEl);
+                    }
+                    
+                    const formattedSeconds = diffSeconds.toString().padStart(2, '0');
+                    countdownEl.innerHTML = `⚠️ Starts in: ${diffMinutes}m ${formattedSeconds}s`;
+                } else {
+                    card.classList.remove('upcoming-warning');
+                    const countdownEl = card.querySelector('.countdown-warning');
+                    if (countdownEl) {
+                        countdownEl.remove();
+                    }
+                }
+            });
+        }
+
+        openTodaySection();
+        
+        updateTimers();
+        setInterval(updateTimers, 1000);
     </script>
 </body>
 </html>
-
