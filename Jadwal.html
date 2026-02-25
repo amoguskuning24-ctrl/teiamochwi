@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Weekly Schedule</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #faf7f2;
+            color: #4a4a4a;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .schedule-container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #8c7a6b;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        /* Collapsible Section Styling */
+        .day-section {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 24px rgba(149, 157, 165, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .day-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed #eee;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            list-style: none; 
+        }
+
+        .day-title::-webkit-details-marker {
+            display: none;
+        }
+
+        .day-title::after {
+            content: '▼';
+            font-size: 0.6em;
+            color: #ccc;
+            transition: transform 0.3s ease;
+        }
+
+        details[open] .day-title::after {
+            transform: rotate(180deg);
+        }
+
+        details[open] .day-title {
+            margin-bottom: 15px;
+        }
+
+        /* Pastel Day Colors */
+        .monday .day-title { color: #82a4d4; }
+        .tuesday .day-title { color: #d4829e; }
+        .wednesday .day-title { color: #a482d4; }
+        .thursday .day-title { color: #d4ae82; }
+        .friday .day-title { color: #82d4a4; }
+
+        .class-card {
+            border-radius: 16px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .class-card:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Card Backgrounds */
+        .monday .class-card { background-color: #eaf1fa; border-left: 6px solid #b8cdeb; }
+        .tuesday .class-card { background-color: #faeaf0; border-left: 6px solid #ebb8ca; }
+        .wednesday .class-card { background-color: #f0eafa; border-left: 6px solid #cab8eb; }
+        .thursday .class-card { background-color: #faefe6; border-left: 6px solid #ebceb8; }
+        .friday .class-card { background-color: #eafaea; border-left: 6px solid #b8ebc6; }
+
+        .class-name {
+            font-weight: 700;
+            font-size: 1.1em;
+            margin: 0 0 8px 0;
+            color: #333;
+        }
+
+        .class-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            margin-right: 8px;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="schedule-container">
+        <h1>Class Schedule<br>(≡ ⓛ ω ⓛ ≡)</h1>
+
+        <details class="day-section monday">
+            <summary class="day-title">Monday</summary>
+            
+            <div class="class-card">
+                <p class="class-name">CAKI1LAB3 - KALKULUS LANJUT</p>
+                <div class="class-details">
+                    <div class="detail-row"><span class="icon">🕒</span> 10:30:00 - 12:30:00</div>
+                    <div class="detail-row"><span class="icon">📍</span> KU3-0917</div>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <p class="class-name">CAK1IAB4 - ALGORITMA DAN PEMROGRAMAN 2</p>
+                <div class="class-details">
+                    <div class="detail-row"><span class="icon">🕒</span> 12:30:00 - 14:30:00</div>
+                    <div class="detail-row"><span class="icon">📍</span> KU3-0917</div>
+                </div>
+            </div>
+        </details>
+
+        <details class="day-section tuesday">
+            <summary class="day-title">Tuesday</summary>
+            
+            <div class="class-card">
+                <p class="class-name">CAK1IAB4 - ALGORITMA DAN PEMROGRAMAN 2</p>
+                <div class="class-details">
+                    <div class="detail-row"><span class="icon">🕒</span> 06:30:00 - 09:30:00</div>
+                    <div class="detail-row"><span class="icon">📍</span> TULT-0617</div>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <p class="class-name">CAK1NAB3 - ORGANISASI DAN ARSITEKTUR KOMPUTER</p>
+                <div class="class-details">
+                    <div class="detail-row"><span class="icon">🕒</span> 10:30:00 - 13:30:00</div>
+                    <div class="detail-row"><span class="icon">📍</span> TULT-1509</div>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <p class="class-name">CAKI1LAB3 - KALKULUS LANJUT</p>
+                <div class="class-details">
+                    <div class="detail-row"><span class="icon">🕒</span> 14:30:00 - 16:30:00</div>
+                    <div class="detail-row"><span class="icon">📍</span> KU3-0917</div>
+                </div>
+            </div>
+        </details>
+
+        <details class="day-section wednesday">
+            <summary class="day-title">Wednesday</summary>
+            
+            <div class="class-card">
+                <p class="class-name">CAK1IAB4 - ALGORITMA DAN PEMROGRAMAN 2</p>
+                <div class="class-details">
+                    <div class="detail-row"><span class="icon">🕒</span> 08:30:00 - 10:30:00</div>
+                    <div class="detail-row"><span class="icon">📍</span> TULT-1509</div>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <p class="class-name">CAK1MAB3 - MATRIKS DAN RUANG VEKTOR</p>
+                <div class="class-details">
+                    <div class="detail-row"><span class="icon">🕒</span> 11:30:00 - 14:30:00</div>
+                    <div class="detail-row"><span class="icon">📍</span> TULT-1510</div>
+                </div>
+            </div>
+        </details>
+
+        <details class="day-section thursday">
+            <summary class="day-title">Thursday</summary>
+            
+            <div class="class-card">
+                <p class="class-name">CAK1KAB2 - ETIKA DALAM AI</p>
+                <div class="class-details">
+                    <div class="detail-row"><span class="icon">🕒</span> 14:30:00 - 16:30:00</div>
+                    <div class="detail-row"><span class="icon">📍</span> TULT-1509</div>
+                </div>
+            </div>
+        </details>
+
+        <details class="day-section friday">
+            <summary class="day-title">Friday</summary>
+            
+            <div class="class-card">
+                <p class="class-name">CAK1OAB3 - PEMODELAN BASIS DATA</p>
+                <div class="class-details">
+                    <div class="detail-row"><span class="icon">🕒</span> 08:30:00 - 11:30:00</div>
+                    <div class="detail-row"><span class="icon">📍</span> TULT-1509</div>
+                </div>
+            </div>
+
+            <div class="class-card">
+                <p class="class-name">UCKXADB2 - BAHASA INGGRIS</p>
+                <div class="class-details">
+                    <div class="detail-row"><span class="icon">🕒</span> 14:30:00 - 16:30:00</div>
+                    <div class="detail-row"><span class="icon">📍</span> TULT-1510</div>
+                </div>
+            </div>
+        </details>
+
+    </div>
+
+    <script>
+        // Get current day
+        const todayIndex = new Date().getDay();
+        
+        // Match index to class names
+        const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const todayClass = days[todayIndex];
+
+        // Find today's element and open it
+        const todayElement = document.querySelector('.' + todayClass);
+        if (todayElement) {
+            todayElement.setAttribute('open', '');
+        }
+    </script>
+</body>
+</html>
