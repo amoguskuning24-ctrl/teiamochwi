@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Weekly Schedule</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 
         body {
             font-family: 'Nunito', sans-serif;
@@ -29,7 +29,29 @@
             font-weight: 700;
         }
 
-        /* Collapsible Section Styling */
+        /* --- CLOCK / TOGGLE --- */
+        .site-clock {
+            text-align: center;
+            color: #8c7a6b;
+            font-size: 1.05em;
+            font-weight: 700;
+            background-color: #f2ebe6;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 2px dashed #d9cbbb;
+            margin: -10px auto 30px auto;
+            width: fit-content;
+            box-shadow: 0 4px 12px rgba(140, 122, 107, 0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .site-clock:hover {
+            background-color: #e6dbd0;
+        }
+
+        /* --- DAY SECTIONS --- */
         .day-section {
             background: #ffffff;
             border-radius: 24px;
@@ -50,6 +72,7 @@
             justify-content: space-between;
             align-items: center;
             list-style: none; 
+            transition: opacity 0.5s ease, filter 0.5s ease;
         }
 
         .day-title::-webkit-details-marker {
@@ -71,85 +94,110 @@
             margin-bottom: 15px;
         }
 
-        /* Pastel Day Colors */
         .monday .day-title { color: #82a4d4; }
         .tuesday .day-title { color: #d4829e; }
         .wednesday .day-title { color: #a482d4; }
         .thursday .day-title { color: #d4ae82; }
         .friday .day-title { color: #82d4a4; }
 
+        .day-completed .day-title {
+            opacity: 0.45;
+            filter: grayscale(100%);
+        }
+
+        /* --- CARDS --- */
         .class-card {
             border-radius: 16px;
             padding: 15px 20px;
             margin-bottom: 15px;
             position: relative;
             overflow: hidden;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            transition: background-color 0.3s ease, border-color 0.3s ease, opacity 0.5s ease, filter 0.5s ease;
         }
 
         .class-card:last-child {
             margin-bottom: 0;
         }
 
-        /* Card Backgrounds */
         .monday .class-card { background-color: #eaf1fa; border-left: 6px solid #b8cdeb; }
         .tuesday .class-card { background-color: #faeaf0; border-left: 6px solid #ebb8ca; }
         .wednesday .class-card { background-color: #f0eafa; border-left: 6px solid #cab8eb; }
         .thursday .class-card { background-color: #faefe6; border-left: 6px solid #ebceb8; }
         .friday .class-card { background-color: #eafaea; border-left: 6px solid #b8ebc6; }
 
-        .class-name {
+        .class-code {
+            font-size: 0.8em;
             font-weight: 700;
-            font-size: 1.1em;
-            margin: 0 0 8px 0;
+            color: #8c7a6b;
+            margin: 0 0 2px 0;
+            letter-spacing: 1px;
+        }
+
+        .class-name {
+            font-weight: 800;
+            font-size: 1.15em;
+            margin: 0 0 12px 0;
             color: #333;
         }
 
         .class-details {
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            font-size: 0.9em;
+            gap: 4px;
+            font-size: 0.95em;
+        }
+
+        .time-val, .room-val {
+            font-weight: 800;
             color: #666;
         }
 
-        .detail-row {
-            display: flex;
-            align-items: center;
-        }
-
-        .icon {
-            margin-right: 8px;
-            font-size: 1.1em;
-        }
-
-        /* --- WARNING STYLES --- */
+        /* --- STATUS CLASSES --- */
         .class-card.upcoming-warning {
             background-color: #ffeaea !important; 
             border-left: 6px solid #ff4d4d !important; 
-            animation: pulse 2s infinite;
+            animation: pulse-red 2s infinite;
         }
 
-        .countdown-warning {
+        .class-card.ongoing-status {
+            background-color: #eafaea !important; 
+            border-left: 6px solid #4caf50 !important; 
+            animation: pulse-green 2s infinite;
+        }
+
+        .class-card.completed {
+            opacity: 0.45;
+            filter: grayscale(100%);
+            border-left: 6px solid #ccc !important;
+            background-color: #f9f9f9 !important;
+        }
+
+        .countdown-warning, .countdown-ongoing {
             margin-top: 10px;
             font-weight: 700;
-            color: #d32f2f;
-            background: #fff0f0;
             padding: 6px 12px;
             border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            border: 1px solid #ffcdd2;
+            display: flex;
+            justify-content: center;
             font-size: 0.9em;
         }
 
-        @keyframes pulse {
+        .countdown-warning { color: #d32f2f; background: #fff0f0; border: 1px solid #ffcdd2; }
+        .countdown-ongoing { color: #2e7d32; background: #e8f5e9; border: 1px solid #c8e6c9; }
+
+        @keyframes pulse-red {
             0% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0.3); }
             70% { box-shadow: 0 0 0 8px rgba(255, 77, 77, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
         }
 
-        /* --- UPCOMING BADGE STYLES --- */
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.3); }
+            70% { box-shadow: 0 0 0 8px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+
+        /* --- BADGES --- */
         .upcoming-badge {
             font-size: 0.65em;
             color: #8c7a6b;
@@ -164,24 +212,9 @@
         .title-wrapper {
             display: flex;
             align-items: center;
-			justify-content: space-between;
-			flex: 1;
-			padding-right: 15px;
-        }
-		
-		/* --- LIVE CLOCK STYLES --- */
-        .site-clock {
-            text-align: center;
-            color: #8c7a6b;
-            font-size: 1.05em;
-            font-weight: 700;
-            background-color: #f2ebe6;
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: 2px dashed #d9cbbb;
-            margin: -10px auto 30px auto;
-            width: fit-content;
-            box-shadow: 0 4px 12px rgba(140, 122, 107, 0.08);
+            justify-content: space-between;
+            flex: 1;
+            padding-right: 15px;
         }
     </style>
 </head>
@@ -189,26 +222,29 @@
 
     <div class="schedule-container">
         <h1>(๑ↀᆺↀ๑)<br>Class Schedule</h1>
-		<div id="live-clock" class="site-clock">
-			Loading time... ✧
-		</div>
+        
+        <div id="live-clock" class="site-clock" title="Click to toggle Static View">
+            Loading time... ✧
+        </div>
 
         <details class="day-section monday">
             <summary class="day-title">Monday</summary>
             
             <div class="class-card">
-                <p class="class-name">CAKI1LAB3 - KALKULUS LANJUT</p>
+                <p class="class-code">CAKI1LAB3</p>
+                <p class="class-name">KALKULUS LANJUT</p>
                 <div class="class-details">
-                    <div class="detail-row"><span class="icon">🕒</span> 10:30 - 12:30</div>
-                    <div class="detail-row"><span class="icon">📍</span> KU3-0917</div>
+                    <div class="time-val">10:30 - 12:30</div>
+                    <div class="room-val">KU3-0917</div>
                 </div>
             </div>
 
             <div class="class-card">
-                <p class="class-name">CAK1IAB4 - ALGORITMA DAN PEMROGRAMAN 2</p>
+                <p class="class-code">CAK1IAB4</p>
+                <p class="class-name">ALGORITMA DAN PEMROGRAMAN 2</p>
                 <div class="class-details">
-                    <div class="detail-row"><span class="icon">🕒</span> 12:30 - 14:30</div>
-                    <div class="detail-row"><span class="icon">📍</span> KU3-0917</div>
+                    <div class="time-val">12:30 - 14:30</div>
+                    <div class="room-val">KU3-0917</div>
                 </div>
             </div>
         </details>
@@ -217,26 +253,29 @@
             <summary class="day-title">Tuesday</summary>
             
             <div class="class-card">
-                <p class="class-name">CAK1IAB4 - ALGORITMA DAN PEMROGRAMAN 2</p>
+                <p class="class-code">CAK1IAB4</p>
+                <p class="class-name">ALGORITMA DAN PEMROGRAMAN 2</p>
                 <div class="class-details">
-                    <div class="detail-row"><span class="icon">🕒</span> 06:30 - 09:30</div>
-                    <div class="detail-row"><span class="icon">📍</span> TULT-0617</div>
+                    <div class="time-val">06:30 - 09:30</div>
+                    <div class="room-val">TULT-0617</div>
                 </div>
             </div>
 
             <div class="class-card">
-                <p class="class-name">CAK1NAB3 - ORGANISASI DAN ARSITEKTUR KOMPUTER</p>
+                <p class="class-code">CAK1NAB3</p>
+                <p class="class-name">ORGANISASI DAN ARSITEKTUR KOMPUTER</p>
                 <div class="class-details">
-                    <div class="detail-row"><span class="icon">🕒</span> 10:30 - 13:30</div>
-                    <div class="detail-row"><span class="icon">📍</span> TULT-1509</div>
+                    <div class="time-val">10:30 - 13:30</div>
+                    <div class="room-val">TULT-1509</div>
                 </div>
             </div>
 
             <div class="class-card">
-                <p class="class-name">CAKI1LAB3 - KALKULUS LANJUT</p>
+                <p class="class-code">CAKI1LAB3</p>
+                <p class="class-name">KALKULUS LANJUT</p>
                 <div class="class-details">
-                    <div class="detail-row"><span class="icon">🕒</span> 14:30 - 16:30</div>
-                    <div class="detail-row"><span class="icon">📍</span> KU3-0917</div>
+                    <div class="time-val">14:30 - 16:30</div>
+                    <div class="room-val">KU3-0917</div>
                 </div>
             </div>
         </details>
@@ -245,18 +284,20 @@
             <summary class="day-title">Wednesday</summary>
             
             <div class="class-card">
-                <p class="class-name">CAK1IAB4 - ALGORITMA DAN PEMROGRAMAN 2</p>
+                <p class="class-code">CAK1IAB4</p>
+                <p class="class-name">ALGORITMA DAN PEMROGRAMAN 2</p>
                 <div class="class-details">
-                    <div class="detail-row"><span class="icon">🕒</span> 08:30 - 10:30</div>
-                    <div class="detail-row"><span class="icon">📍</span> TULT-1509</div>
+                    <div class="time-val">08:30 - 10:30</div>
+                    <div class="room-val">TULT-1509</div>
                 </div>
             </div>
 
             <div class="class-card">
-                <p class="class-name">CAK1MAB3 - MATRIKS DAN RUANG VEKTOR</p>
+                <p class="class-code">CAK1MAB3</p>
+                <p class="class-name">MATRIKS DAN RUANG VEKTOR</p>
                 <div class="class-details">
-                    <div class="detail-row"><span class="icon">🕒</span> 11:30 - 14:30</div>
-                    <div class="detail-row"><span class="icon">📍</span> TULT-1510</div>
+                    <div class="time-val">11:30 - 14:30</div>
+                    <div class="room-val">TULT-1510</div>
                 </div>
             </div>
         </details>
@@ -265,10 +306,11 @@
             <summary class="day-title">Thursday</summary>
             
             <div class="class-card">
-                <p class="class-name">CAK1KAB2 - ETIKA DALAM AI</p>
+                <p class="class-code">CAK1KAB2</p>
+                <p class="class-name">ETIKA DALAM AI</p>
                 <div class="class-details">
-                    <div class="detail-row"><span class="icon">🕒</span> 14:30 - 16:30</div>
-                    <div class="detail-row"><span class="icon">📍</span> TULT-1509</div>
+                    <div class="time-val">14:30 - 16:30</div>
+                    <div class="room-val">TULT-1509</div>
                 </div>
             </div>
         </details>
@@ -277,18 +319,20 @@
             <summary class="day-title">Friday</summary>
             
             <div class="class-card">
-                <p class="class-name">CAK1OAB3 - PEMODELAN BASIS DATA</p>
+                <p class="class-code">CAK1OAB3</p>
+                <p class="class-name">PEMODELAN BASIS DATA</p>
                 <div class="class-details">
-                    <div class="detail-row"><span class="icon">🕒</span> 08:30 - 11:30</div>
-                    <div class="detail-row"><span class="icon">📍</span> TULT-1509</div>
+                    <div class="time-val">08:30 - 11:30</div>
+                    <div class="room-val">TULT-1509</div>
                 </div>
             </div>
 
             <div class="class-card">
-                <p class="class-name">UCKXADB2 - BAHASA INGGRIS</p>
+                <p class="class-code">UCKXADB2</p>
+                <p class="class-name">BAHASA INGGRIS</p>
                 <div class="class-details">
-                    <div class="detail-row"><span class="icon">🕒</span> 14:30 - 16:30</div>
-                    <div class="detail-row"><span class="icon">📍</span> TULT-1510</div>
+                    <div class="time-val">14:30 - 16:30</div>
+                    <div class="room-val">TULT-1510</div>
                 </div>
             </div>
         </details>
@@ -297,18 +341,21 @@
 
     <script>
         const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-		
-		// Force GMT+7
-		function getGMT7Time() {
+        let isStaticMode = false;
+        
+        function getGMT7Time() {
             return new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Jakarta"}));
         }
         
-		// WIB Clock
-		function updateLiveClock() {
+        function updateLiveClock() {
             const clockEl = document.getElementById('live-clock');
             if (!clockEl) return;
 
-            // Force the timezone to WIB (Asia/Jakarta)
+            if (isStaticMode) {
+                clockEl.innerHTML = `┳━┳ ノ( ゜-゜ノ)`;
+                return;
+            }
+
             const wibTime = getGMT7Time();
             const dateObj = new Date(wibTime);
 
@@ -321,46 +368,34 @@
 
             clockEl.innerHTML = `${dayName}, ${hours}:${minutes}:${seconds}`;
         }
-		
-        // Helper: Check if all classes for a specific day are over
+        
         function isTodayDone() {
             const now = getGMT7Time();
             const todayClass = days[now.getDay()];
             const todayElement = document.querySelector('.' + todayClass);
             
-            if (!todayElement) return true; // If no classes, today is "done"
+            if (!todayElement) return true; 
             
             const classCards = todayElement.querySelectorAll('.class-card');
-            let allDone = true;
-            
+            if (classCards.length === 0) return true;
+
+            let allCompleted = true;
             classCards.forEach(card => {
-                const timeRow = Array.from(card.querySelectorAll('.detail-row')).find(row => row.textContent.includes('🕒'));
-                if (timeRow) {
-                    // Match the END time part of the string
-                    const match = timeRow.textContent.match(/-\s*(\d{2}):(\d{2})/);
-                    if (match) {
-                        const endHour = parseInt(match[1], 10);
-                        const endMinute = parseInt(match[2], 10);
-                        const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute, 0);
-                        
-                        // If any class ends after the current time, today is not done yet
-                        if (now < endTime) {
-                            allDone = false;
-                        }
-                    }
+                if (!card.classList.contains('completed')) {
+                    allCompleted = false;
                 }
             });
             
-            return allDone;
+            return allCompleted;
         }
 
-        // Initialize which day to show
         function initScheduleDisplay() {
+            if (isStaticMode) return;
+
             const now = getGMT7Time();
             let targetIndex = now.getDay();
             let showingFuture = false;
             
-            // If today's classes are completely finished, look for the next day with classes
             if (isTodayDone()) {
                 showingFuture = true;
                 for (let i = 1; i <= 7; i++) {
@@ -376,77 +411,209 @@
             if (targetElement) {
                 targetElement.setAttribute('open', '');
                 
-                // If future day, add the visual hint badge
                 if (showingFuture) {
                     const summary = targetElement.querySelector('.day-title');
                     const isTomorrow = (targetIndex === (now.getDay() + 1) % 7);
                     const badgeText = isTomorrow ? 'Tomorrow ✧' : 'Upcoming ✧';
                     
-                    summary.innerHTML = `<div class="title-wrapper">${summary.textContent} <span class="upcoming-badge">${badgeText}</span></div>`;
+                    if (!summary.querySelector('.upcoming-badge')) {
+                        summary.innerHTML = `<div class="title-wrapper">${summary.textContent} <span class="upcoming-badge">${badgeText}</span></div>`;
+                    }
                 }
             }
         }
 
-        // Check for upcoming classes and update countdowns
         function updateTimers() {
+            if (isStaticMode) return;
+
             const now = getGMT7Time();
             const todayIndex = now.getDay();
-            const todayClass = days[todayIndex];
             
-            // ONLY calculate timers for today's element
-            const todayElement = document.querySelector('.' + todayClass);
-            if (!todayElement) return;
+            days.forEach((dayClass, dayIndex) => {
+                const dayElement = document.querySelector('.' + dayClass);
+                if (!dayElement) return;
 
-            const classCards = todayElement.querySelectorAll('.class-card');
-
-            classCards.forEach(card => {
-                const timeRow = Array.from(card.querySelectorAll('.detail-row')).find(row => row.textContent.includes('🕒'));
-                if (!timeRow) return;
-
-                // Match the START time part of the string
-                const timeMatch = timeRow.textContent.match(/(\d{2}):(\d{2})/);
-                if (!timeMatch) return;
-
-                const startHour = parseInt(timeMatch[1], 10);
-                const startMinute = parseInt(timeMatch[2], 10);
-
-                const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute, 0);
+                const classCards = dayElement.querySelectorAll('.class-card');
                 
-                const timeDiffMs = startTime - now;
-                const diffMinutes = Math.floor(timeDiffMs / 60000);
-                const diffSeconds = Math.floor((timeDiffMs % 60000) / 1000);
-
-                // Warning within 1 hour
-                if (timeDiffMs > 0 && timeDiffMs <= 60 * 60 * 1000) {
-                    card.classList.add('upcoming-warning');
-                    
-                    let countdownEl = card.querySelector('.countdown-warning');
-                    if (!countdownEl) {
-                        countdownEl = document.createElement('div');
-                        countdownEl.className = 'countdown-warning';
-                        card.querySelector('.class-details').appendChild(countdownEl);
-                    }
-                    
-                    const formattedSeconds = diffSeconds.toString().padStart(2, '0');
-                    countdownEl.innerHTML = `⚠️ Starts in: ${diffMinutes}m ${formattedSeconds}s`;
+                let isPastDay = false;
+                let isFutureDay = false;
+                
+                if (todayIndex === 6 || todayIndex === 0) {
+                    isFutureDay = true;
                 } else {
-                    card.classList.remove('upcoming-warning');
-                    const countdownEl = card.querySelector('.countdown-warning');
-                    if (countdownEl) {
-                        countdownEl.remove();
+                    if (dayIndex < todayIndex) isPastDay = true;
+                    if (dayIndex > todayIndex) isFutureDay = true;
+                }
+
+                let allDayCompleted = classCards.length > 0;
+
+                classCards.forEach(card => {
+                    const removeTimers = () => {
+                        const countdownEl = card.querySelector('.countdown-warning');
+                        if (countdownEl) countdownEl.remove();
+                        const ongoingEl = card.querySelector('.countdown-ongoing');
+                        if (ongoingEl) ongoingEl.remove();
+                    };
+
+                    if (isPastDay) {
+                        card.classList.remove('upcoming-warning', 'ongoing-status');
+                        card.classList.add('completed');
+                        card.style.animationDelay = '';
+                        removeTimers();
+                        return;
                     }
+                    
+                    if (isFutureDay) {
+                        card.classList.remove('upcoming-warning', 'ongoing-status', 'completed');
+                        card.style.animationDelay = '';
+                        removeTimers();
+                        allDayCompleted = false;
+                        return;
+                    }
+
+                    const timeRow = card.querySelector('.time-val');
+                    if (!timeRow) {
+                        allDayCompleted = false;
+                        return;
+                    }
+
+                    const timeMatch = timeRow.textContent.match(/(\d{2}):(\d{2})\s*-\s*(\d{2}):(\d{2})/);
+                    if (!timeMatch) {
+                        allDayCompleted = false;
+                        return;
+                    }
+
+                    const startHour = parseInt(timeMatch[1], 10);
+                    const startMinute = parseInt(timeMatch[2], 10);
+                    const endHour = parseInt(timeMatch[3], 10);
+                    const endMinute = parseInt(timeMatch[4], 10);
+
+                    const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute, 0);
+                    const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute, 0);
+                    
+                    const timeUntilStartMs = startTime - now;
+                    const timeUntilEndMs = endTime - now;
+
+                    if (now >= startTime && now < endTime) {
+                        allDayCompleted = false;
+                        card.classList.remove('upcoming-warning', 'completed');
+                        card.classList.add('ongoing-status');
+                        
+                        if (!card.style.animationDelay) {
+                            const currentMs = now.getSeconds() * 1000 + now.getMilliseconds();
+                            card.style.animationDelay = `-${currentMs % 2000}ms`;
+                        }
+
+                        let countdownWarningEl = card.querySelector('.countdown-warning');
+                        if (countdownWarningEl) countdownWarningEl.remove();
+
+                        let ongoingEl = card.querySelector('.countdown-ongoing');
+                        if (!ongoingEl) {
+                            ongoingEl = document.createElement('div');
+                            ongoingEl.className = 'countdown-ongoing';
+                            card.querySelector('.class-details').appendChild(ongoingEl);
+                        }
+                        
+                        const diffHours = Math.floor(timeUntilEndMs / (1000 * 60 * 60));
+                        const diffMinutes = Math.floor((timeUntilEndMs % (1000 * 60 * 60)) / 60000);
+                        const diffSeconds = Math.floor((timeUntilEndMs % 60000) / 1000);
+                        const formattedSeconds = diffSeconds.toString().padStart(2, '0');
+                        
+                        if (diffHours > 0) {
+                            ongoingEl.innerHTML = `🟢 Ends in: ${diffHours}h ${diffMinutes}m ${formattedSeconds}s`;
+                        } else {
+                            ongoingEl.innerHTML = `🟢 Ends in: ${diffMinutes}m ${formattedSeconds}s`;
+                        }
+                    } 
+                    else if (timeUntilStartMs > 0 && timeUntilStartMs <= 60 * 60 * 1000) {
+                        allDayCompleted = false;
+                        card.classList.remove('ongoing-status', 'completed');
+                        card.classList.add('upcoming-warning');
+                        
+                        if (!card.style.animationDelay) {
+                            const currentMs = now.getSeconds() * 1000 + now.getMilliseconds();
+                            card.style.animationDelay = `-${currentMs % 2000}ms`;
+                        }
+                        
+                        let ongoingEl = card.querySelector('.countdown-ongoing');
+                        if (ongoingEl) ongoingEl.remove();
+
+                        let countdownEl = card.querySelector('.countdown-warning');
+                        if (!countdownEl) {
+                            countdownEl = document.createElement('div');
+                            countdownEl.className = 'countdown-warning';
+                            card.querySelector('.class-details').appendChild(countdownEl);
+                        }
+                        
+                        const diffMinutes = Math.floor(timeUntilStartMs / 60000);
+                        const diffSeconds = Math.floor((timeUntilStartMs % 60000) / 1000);
+                        const formattedSeconds = diffSeconds.toString().padStart(2, '0');
+                        countdownEl.innerHTML = `⚠️ Starts in: ${diffMinutes}m ${formattedSeconds}s`;
+                    } 
+                    else if (now >= endTime) {
+                        card.classList.remove('upcoming-warning', 'ongoing-status');
+                        card.classList.add('completed');
+                        card.style.animationDelay = '';
+                        removeTimers();
+                    }
+                    else {
+                        allDayCompleted = false;
+                        card.classList.remove('upcoming-warning', 'ongoing-status', 'completed');
+                        card.style.animationDelay = '';
+                        removeTimers();
+                    }
+                });
+
+                if (allDayCompleted) {
+                    dayElement.classList.add('day-completed');
+                } else {
+                    dayElement.classList.remove('day-completed');
                 }
             });
         }
 
+        document.getElementById('live-clock').addEventListener('click', function() {
+            isStaticMode = !isStaticMode;
+            
+            if (isStaticMode) {
+                this.innerHTML = "┳━┳ ノ( ゜-゜ノ)";
+                
+                document.querySelectorAll('details').forEach(d => d.setAttribute('open', ''));
+                
+                document.querySelectorAll('.class-card').forEach(c => {
+                    c.classList.remove('completed', 'upcoming-warning', 'ongoing-status');
+                    c.style.animationDelay = '';
+                });
+                
+                document.querySelectorAll('.day-section').forEach(d => {
+                    d.classList.remove('day-completed');
+                });
+                
+                document.querySelectorAll('.countdown-warning, .countdown-ongoing, .upcoming-badge').forEach(e => e.remove());
+                
+                document.querySelectorAll('.title-wrapper').forEach(wrapper => {
+                    const parent = wrapper.parentNode;
+                    parent.innerHTML = wrapper.childNodes[0].nodeValue.trim(); 
+                });
+
+            } else {
+                document.querySelectorAll('details').forEach(d => d.removeAttribute('open'));
+                
+                initScheduleDisplay();
+                updateTimers();
+                updateLiveClock();
+            }
+        });
+
+        // Initialize script
+        updateTimers(); 
         initScheduleDisplay();
+        updateLiveClock();
         
-        updateTimers();
-		updateLiveClock();
         setInterval(() => {
-			updateTimers();
-			updateLiveClock();
-		}, 1000);
+            updateTimers();
+            updateLiveClock();
+        }, 1000);
     </script>
 </body>
 </html>
